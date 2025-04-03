@@ -2,6 +2,7 @@ import pytest
 from django.contrib.auth.models import User
 from product.models.product import Product
 from order.models.order import Order
+from django.db.utils import IntegrityError
 
 
 @pytest.mark.django_db
@@ -27,5 +28,5 @@ class TestOrderModel:
 
     def test_order_without_user(self):
         # Tentativa de criação de um pedido sem usuário
-        with pytest.raises(ValueError):
+        with pytest.raises(IntegrityError):
             Order.objects.create(user=None)
