@@ -6,7 +6,7 @@ from product.serializers.product_serializer import ProductSerializer
 
 class OrderSerializers(serializers.ModelSerializer):
     product = ProductSerializer(required=True, many=True)
-    products_id = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all(), read_only=True)
+    products_id = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all(), write_only=True)
     total = serializers.SerializerMethodField()
 
     def get_total(self, instance):
