@@ -30,7 +30,7 @@ class TestProductSerializer:
             'description': 'Book Description',
             'price': '19.99',
             'active': True,
-            'category': [category.id]  # Usar ID da categoria
+            'categories_id': [category.id]  # Usar ID da categoria
         }
 
         # Serializar os dados do produto
