@@ -30,7 +30,7 @@ class TestProductViewSet(APITestCase):
         product_data = json.loads(response.content)
 
         self.assertEqual(product_data[0]['title'], self.product.title)
-        self.assertEqual(product_data[0]['price'], self.product.price)
+        self.assertEqual(float(product_data[0]['price']), float(self.product.price))
         self.assertEqual(product_data[0]['active'], self.product.active)
 
     def test_create_product(self):

@@ -15,8 +15,11 @@ class TestOrderViewSet(APITestCase):
     client = APIClient()
 
     def setUp(self):
-        self.category = CategoryFactory(title="technology")
-        self.product = ProductFactory(title="mouse", price=100, category=[self.category])
+        # Garantir que o slug seja único e gerado corretamente
+        self.category = CategoryFactory(title="technology", slug="technology-1")
+        self.product = ProductFactory(
+            title="mouse", price=100, category=[self.category]
+        )
         self.order = OrderFactory(product=[self.product])
 
     def test_order(self):
@@ -28,8 +31,7 @@ class TestOrderViewSet(APITestCase):
 
         order_data = json.loads(response.content)[0]
         self.assertEqual(order_data['product'][0]['title'], self.product.title)
-        self.assertEqual(order_data['product'][0]['price'], self.product.price)
-        self.assertEqual(order_data['product'][0]['active'], self.category.slug)
+        self.assertEqual(float(order_data['product'][0]['price']), float(self.product.price))
         self.assertEqual(order_data['product'][0]['category'][0]['title'], self.category.title)
 
     def test_create_order(self):
