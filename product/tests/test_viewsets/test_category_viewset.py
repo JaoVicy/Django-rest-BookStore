@@ -28,7 +28,8 @@ class TestCategoryViewSet(APITestCase):
 
     def test_create_category(self):
         data = json.dumps({
-            'title' : 'technology'
+            'title' : 'technology',
+            'slug' : 'technology'
         })
 
         response = self.client.post(

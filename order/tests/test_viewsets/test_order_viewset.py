@@ -20,7 +20,8 @@ class TestOrderViewSet(APITestCase):
         self.product = ProductFactory(
             title="mouse", price=100, category=[self.category]
         )
-        self.order = OrderFactory(product=[self.product])
+        self.order = OrderFactory() # Cria um pedido com o usuário padrão
+        self.order.product.set([self.product]) # Uso do metodo set() para associar o produto ao pedido, evitando o erro de ManyToManyField
 
     def test_order(self):
         response = self.client.get(
@@ -37,10 +38,12 @@ class TestOrderViewSet(APITestCase):
     def test_create_order(self):
         user = UserFactory()
         product = ProductFactory()
-        data = json.dumps({
-            'products_id': [product.id],
-            'user': user.id
 
+        # Autentica o client com o usuário criado
+        self.client.force_authenticate(user=user)
+
+        data = json.dumps({
+            'products_id': [product.id]
         })
 
         response = self.client.post(
@@ -48,6 +51,7 @@ class TestOrderViewSet(APITestCase):
             data=data,
             content_type='application/json'
         )
+        print("Resposta da API:", response.content)  # <-- Esse é o debug que citei
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Order.objects.count(), 2)
