@@ -10,3 +10,5 @@ class CategorySerializer(serializers.ModelSerializer):
                   'description',
                   'active',
                   ]
+
+        extra_kwargs = {'product': {'required': False}}
