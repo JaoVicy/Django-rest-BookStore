@@ -12,4 +12,4 @@ class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
 
     def get_queryset(self): # queryset is a method
-        return Product.objects.all()
+        return Product.objects.all().order_by('id')
