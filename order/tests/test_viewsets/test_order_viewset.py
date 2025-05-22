@@ -2,6 +2,7 @@ import json
 
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
+from rest_framework.authtoken.models import Token
 
 from django.urls import reverse
 
@@ -15,6 +16,10 @@ class TestOrderViewSet(APITestCase):
     client = APIClient()
 
     def setUp(self):
+        self.user = UserFactory()
+        token = Token.objects.create(user=self.user) #added
+        token.save() #added
+
         # Garantir que o slug seja único e gerado corretamente
         self.category = CategoryFactory(title="technology", slug="technology-1")
         self.product = ProductFactory(
@@ -24,6 +29,8 @@ class TestOrderViewSet(APITestCase):
         self.order.product.set([self.product]) # Uso do metodo set() para associar o produto ao pedido, evitando o erro de ManyToManyField
 
     def test_order(self):
+        token = Token.objects.get(user__username=self.user.username)  # added
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)  # added
         response = self.client.get(
             reverse('order-list', kwargs={'version': 'v1'})
         )
@@ -48,6 +55,8 @@ class TestOrderViewSet(APITestCase):
             self.category.title,
         )
     def test_create_order(self):
+        token = Token.objects.get(user__username=self.user.username)  # added
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)  # added
         user = UserFactory()
         product = ProductFactory()
 
