@@ -3,6 +3,7 @@ from product.models import Product
 from order.models import Order
 from product.serializers.product_serializer import ProductSerializer
 
+
 class OrderSerializers(serializers.ModelSerializer):
     product = ProductSerializer(many=True, read_only=True)
     products_id = serializers.PrimaryKeyRelatedField(
@@ -22,10 +23,10 @@ class OrderSerializers(serializers.ModelSerializer):
         extra_kwargs = {"product": {"required": False}}
 
     def create(self, validated_data):
-        product_data = validated_data.pop('products_id')
-        user_data = validated_data.pop('user')
+        product_data = validated_data.pop("products_id")
+        user_data = validated_data.pop("user")
 
-        order = Order.objects.create(user = user_data)
+        order = Order.objects.create(user=user_data)
         for product in product_data:
             order.product.add(product)
 
