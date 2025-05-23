@@ -18,19 +18,16 @@ class TestProductSerializer:
 
         # Criar uma categoria com um slug único
         category = Category.objects.create(
-            title="Fiction",
-            slug=unique_slug,
-            description="Fiction books",
-            active=True
+            title="Fiction", slug=unique_slug, description="Fiction books", active=True
         )
 
         # Dados do produto a serem testados
         product_data = {
-            'title': 'Book Title',
-            'description': 'Book Description',
-            'price': '19.99',
-            'active': True,
-            'categories_id': [category.id]  # Usar ID da categoria
+            "title": "Book Title",
+            "description": "Book Description",
+            "price": "19.99",
+            "active": True,
+            "categories_id": [category.id],  # Usar ID da categoria
         }
 
         # Serializar os dados do produto
@@ -46,21 +43,21 @@ class TestProductSerializer:
 
         # Salvar o produto e verificar os atributos
         product = serializer.save()
-        assert product.title == 'Book Title'
-        assert product.description == 'Book Description'
-        assert product.price == Decimal('19.99')
+        assert product.title == "Book Title"
+        assert product.description == "Book Description"
+        assert product.price == Decimal("19.99")
         assert product.active is True
         assert product.category.count() == 1
-        assert product.category.first().title == 'Fiction'
+        assert product.category.first().title == "Fiction"
 
     def test_product_serializer_invalid_data(self):
         # Dados do produto inválido a serem testados
         product_data = {
-            'title': '',
-            'description': 'Book Description',
-            'price': '19.99',
-            'active': True,
-            'category': []
+            "title": "",
+            "description": "Book Description",
+            "price": "19.99",
+            "active": True,
+            "category": [],
         }
 
         # Serializar os dados do produto
@@ -70,4 +67,4 @@ class TestProductSerializer:
         assert not serializer.is_valid()
 
         # Verificar se o campo 'title' está nos erros do serializer
-        assert 'title' in serializer.errors
+        assert "title" in serializer.errors
