@@ -10,11 +10,15 @@ class TestOrderModel:
 
     def test_order_creation(self):
         # Criação de um usuário
-        user = User.objects.create_user(username='testuser', password='12345')
+        user = User.objects.create_user(username="testuser", password="12345")
 
         # Criação de produtos
-        product1 = Product.objects.create(title='Product 1', description='Description 1', price=10.0, active=True)
-        product2 = Product.objects.create(title='Product 2', description='Description 2', price=20.0, active=True)
+        product1 = Product.objects.create(
+            title="Product 1", description="Description 1", price=10.0, active=True
+        )
+        product2 = Product.objects.create(
+            title="Product 2", description="Description 2", price=20.0, active=True
+        )
 
         # Criação de um pedido
         order = Order.objects.create(user=user)
