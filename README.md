@@ -1,4 +1,4 @@
-# 🦄 Django-rest-BookStore 🦄
+# 📚 Django-rest-BookStore 📚
 
 Este repositório contém aplicações desenvolvidas utilizando o **Django Rest Framework**. O objetivo é gerenciar uma livraria digital, permitindo operações como cadastro, listagem, atualização e remoção de livros através de uma API RESTful. 📚✨
 
@@ -56,4 +56,4 @@ Contribuições são bem-vindas! Abra uma issue ou envie um pull request com sug
 
 ---
 
-Desenvolvido por [JaoVicy](https://github.com/JaoVicy) 🦄
+Desenvolvido por [JaoVicy](https://github.com/JaoVicy) 📚
