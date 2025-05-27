@@ -9,11 +9,9 @@ ENV PYTHONUNBUFFERED=1 \
     POETRY_VERSION=2.1.2 \
     POETRY_HOME="/opt/poetry" \
     POETRY_VIRTUALENVS_IN_PROJECT=true \
-    POETRY_NO_INTERACTION=1 \
-    PYSETUP_PATH="/opt/pysetup" \
-    VENV_PATH="/opt/pysetup/.venv"
+    POETRY_NO_INTERACTION=1
 
-ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
+ENV PATH="$POETRY_HOME/bin:$PATH"
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y curl build-essential gcc libpq-dev \
@@ -21,12 +19,11 @@ RUN apt-get update \
     && pip install psycopg2 \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR ${PYSETUP_PATH}
-COPY poetry.lock pyproject.toml ./
-RUN poetry install --no-interaction --no-root
-
 WORKDIR /app
+
 COPY . /app/
+
+RUN poetry install --no-interaction --no-root
 
 EXPOSE 8000
 
