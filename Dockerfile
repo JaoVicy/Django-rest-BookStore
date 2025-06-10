@@ -1,31 +1,55 @@
-FROM python:3.10-slim as python-base
+# python-base sets up all our shared environment variables
+FROM python:3.12-slim as python-base
 
-# Ambiente
+# python
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
+    \
+    # pip
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=2.1.2 \
+    \
+    # poetry
     POETRY_HOME="/opt/poetry" \
     POETRY_VIRTUALENVS_IN_PROJECT=true \
-    POETRY_NO_INTERACTION=1
+    POETRY_NO_INTERACTION=1 \
+    \
+    # paths
+    PYSETUP_PATH="/opt/pysetup" \
+    VENV_PATH="/opt/pysetup/.venv"
 
-ENV PATH="$POETRY_HOME/bin:$PATH"
+# prepend poetry and venv to path
+ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y curl build-essential gcc libpq-dev \
-    && curl -sSL https://install.python-poetry.org | python3 - \
-    && pip install psycopg2 \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get install --no-install-recommends -y \
+        curl \
+        build-essential
 
-WORKDIR /app
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . /app/
+# install poetry
+RUN pip install poetry
 
-RUN poetry install --no-interaction --no-root
+# install postgres dependencies inside of Docker
+RUN apt-get update \
+    && apt-get -y install libpq-dev gcc \
+    && pip install psycopg2-binary
 
+# Definir o diretório onde será instalado o projeto
+WORKDIR $PYSETUP_PATH
+
+# Copiar os arquivos de dependências antes para otimizar o cache
+COPY poetry.lock pyproject.toml ./
+COPY README.md ./
+
+# Copiar o código do projeto ANTES da instalação
+COPY . .
+
+# Instalar as dependências e o próprio projeto
+RUN poetry install
+
+# Expor a porta padrão do Django
 EXPOSE 8000
 
-CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Comando de inicialização
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
