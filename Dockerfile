@@ -33,7 +33,7 @@ RUN pip install poetry
 # install postgres dependencies inside of Docker
 RUN apt-get update \
     && apt-get -y install libpq-dev gcc \
-    && pip install psycopg2-binary
+    && pip install psycopg2
 
 # Definir o diretório onde será instalado o projeto
 WORKDIR $PYSETUP_PATH
