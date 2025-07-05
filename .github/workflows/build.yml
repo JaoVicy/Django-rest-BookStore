@@ -32,12 +32,6 @@ jobs:
       shell: bash
       run: python -m poetry install
 
-    - name: Export env.dev variables
-      run: |
-        set -a
-        source env.dev
-        set +a
-
     - name: Test
       run: |
         poetry run python manage.py test
