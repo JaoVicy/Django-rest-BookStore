@@ -51,5 +51,5 @@ RUN poetry install
 # Expor a porta padrão do Django
 EXPOSE 8000
 
-# Comando de inicialização
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Comando de inicialização (produção/Heroku)
+CMD gunicorn bookstore.wsgi:application --bind 0.0.0.0:$PORT
